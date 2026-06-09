@@ -129,6 +129,24 @@ The second is a trivial example showing an interaction between two images, which
 
 ### Local Entropy
 
+Before getting into the implementation, let's go through a bit of theory.
+Entropy, specifically Shannon entropy, measures the amount of bits needed to encode a piece of information.
+The equation is defined as follows:
+
+$$
+H(X) = -\sum_{x \in X}{p(x)\log_2p(x)}
+$$
+where \(H(X)\) is the entropy of random variable \(X\); \(p(x)\) is the probability.
+
+In case of images, the closes thing that resembles number of samples is a histogram.
+The probability of a grayscale value can be acquired by dividing the histogram with the total population.
+The total population is the number of pixels in an image.
+However, if a mask is used when collecting the histogram, only the pixels in the mask should be counted in the population.
+This provides us with the necessary steps to compute entropy.
+
+1. Build a histogram of the subimage (or in a mask) extracted by a ROI.
+2. Divide the histogram with the population and use the eqation above to calculate entropy.
+
 To follow the skimage API, the function must take in an `image` and a `footprint`.
 A footprint in opencv is called a kernel.
 Our function signature can thus be declared as follows.
@@ -149,20 +167,10 @@ for (auto const& roi : Sliding2dIterator{img.size(), kernel.size()}) {
 }
 ```
 
-valid population is the population in the kernel, since the `kernel` is not guaranteed to be a full rect.
-The output size is the resulting size of this operation, which is basically the image size with half of the kernel size trimed on both directions.
-It is noted that division by 2 and then times 2 is necessary as we exploit the power of integer division.
+`valid_population` is the population in the kernel, which might not be a full rect (e.g. ellipses).
+`output_size` is the resulting size of this operation, which is the image size with half of the kernel size trimed on both directions.
+It is noted that division by 2 and then times 2 is necessary as we exploit the round down property of integer division.
 This allows the half kernel size to be `5` when the kernel size is both `10` and `11`, which will give us the correct padding size of `10` in both even and odd cases.
-
-There are two major steps in calculate the entropy.
-
-1. Build a histogram of the subimage extracted by the window.
-2. Conform the histogram into a probability and use the following function to calculate entropy.
-
-$$
-H(X) = -\sum_{x \in X}{p(x)\log_2p(x)}
-$$
-where \(H(X)\) is the entropy of random variable \(X\); \(p(x)\) is the probability.
 
 The following code is used to build the histogram, which is almost the same as the example in OpenCV docs.
 
@@ -179,11 +187,15 @@ cv::Mat hist;
 cv::calcHist(&patch, 1, &channels, kernel, hist, 1, &n_bins, &ranges);
 ```
 
-Since entropy requires probability but histogram are simply counts of each bin, we need to divide each bin by the `valid_population` previously computed outside the loop.
-The code to compute and update the `entropy_img` is listed as follows.
+Then, the histogram is divided by the population to get the probability.
 
-```c++ {hl_lines=["3-5"]}
+```c++
 hist /= valid_population;
+```
+
+Finally, the code to compute and update the `entropy_img` is listed as follows.
+
+```c++ {hl_lines=["2-4"]}
 hist.forEach<float>([](float& val, int const* pos) {
 if (val > 0) {
     val = std::log2(val);
@@ -224,6 +236,6 @@ The `Sliding2dIterator` simplifies iteration over images by using ranged for loo
 It is truly a Zero-Overhead abstraction that improves readability.
 Unfortunately, there is an obvious caveat -- Iterating through pixels sequentially takes way too long.
 In conclusion, this method is not suitable for real-world use.
-However, it is a decent starting point to implement generic sliding windows algorithms.
+Nevertheless, it is a decent starting point to implement generic sliding windows algorithms.
 
 In the next article, I will show how to parallelize this using OpenCV's universal parallel framework (`cv::parallel_for_`).
