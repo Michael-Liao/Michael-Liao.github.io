@@ -2,7 +2,7 @@
 date = '2026-06-07T14:18:06+08:00'
 draft = false
 title = 'OpenCV Sliding Window Processing with C++ Iterators'
-tags=['c++']
+tags = ['c++', 'computer-vision']
 +++
 {{< katex >}}
 
@@ -221,7 +221,7 @@ As shown above, we can iterate both images in the same loop, making it suitable 
 In this article, a C++ iterator is implemented and demonstrated to perform sliding window processing.
 The `Sliding2dIterator` simplifies iteration over images by using ranged for loops and sentinels.
 It is truly a Zero-Overhead abstraction that improves readability.
-Unfortunately, there is an obvious caveat -- Iterating through pixels one-by-one takes way too long.
+Unfortunately, there is an obvious caveat -- Iterating through pixels sequentially takes way too long.
 In conclusion, this method is not suitable for real-world use.
 However, it is a decent starting point to implement generic sliding windows algorithms.
 

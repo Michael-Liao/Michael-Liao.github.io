@@ -31,7 +31,7 @@
 #  pageRef = "posts"
 #  weight = 20
 
-#[[subnavigation]]
+# [[subnavigation]]
 #  name = "An interesting topic"
 #  pageRef = "tags/interesting-topic"
 #  weight = 10
@@ -47,10 +47,10 @@
 #  pageRef = "categories"
 #  weight = 20
 
-#[[main]]
-#  name = "Tags"
-#  pageRef = "tags"
-#  weight = 30
+[[main]]
+ name = "Tags"
+ pageRef = "tags"
+ weight = 30
 
 
 # -- Footer Menu --

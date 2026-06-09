@@ -20,10 +20,17 @@ title = "Tensormike"
   image = "img/profile.jpg"
   imageQuality = 96
   headline = "A performance aware software engineer with great curiosity."
-  bio = ""
+  bio = """Michael Liao is a Software Engineer at Brightest TECH \
+  who specialises in software architecture and optimisations. \
+  He is in charge of the design database library and \
+  has improved critical sections of the inspection flow by 2.4x. \
+  Outside of work, Michael spends most of his time in the kitchen, \
+  especially around the oven 🥐.
+  """
   links = [
     { github = "https://github.com/Michael-Liao" },
     { linkedin = "https://www.linkedin.com/in/yi-hsiang-liao-953083165/" },
+    # { orcid = "https://orcid.org/0009-0009-1993-8027" },
   ]
 #   links = [
 #     { email = "mailto:hello@your_domain.com" },
