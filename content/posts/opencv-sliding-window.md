@@ -3,6 +3,7 @@ date = '2026-06-07T14:18:06+08:00'
 draft = false
 title = 'OpenCV Sliding Window Processing with C++ Iterators'
 tags = ['c++', 'computer-vision']
+categories = ['software engineering']
 +++
 {{< katex >}}
 
